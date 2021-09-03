@@ -1,8 +1,4 @@
 import pytest
-
-import sys
-print(sys.path)
-
 from pytest import approx
 from src.implementation.space2d import Vector2D
 
@@ -39,6 +35,14 @@ def test_calculates_components_correctly():
     assert type(components) is tuple
     assert components[0] == approx(3.4)
     assert components[1] == approx(1.5)
+
+
+def test_equality():
+    v1 = Vector2D(1.2, 3)
+    v2 = Vector2D(1.2, 3)
+    v3 = Vector2D(1.1, 3)
+    assert v1 == v2
+    assert v1 != v3
 
 
 @pytest.mark.parametrize('components,expected_modulus', [
