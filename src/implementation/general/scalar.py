@@ -1,6 +1,7 @@
-from interfaces.scalar import Scalar
+from interfaces.scalar import AbstractScalar
 
-class GeneralScalar(Scalar, float):
+
+class GeneralScalar(AbstractScalar, float):
 
     def __str__(self):
         return str(float(self))

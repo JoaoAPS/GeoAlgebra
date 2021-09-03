@@ -1,4 +1,4 @@
 from interfaces.entity import Entity
 
-class Scalar(Entity):
+class AbstractScalar(Entity):
     pass

@@ -1,5 +1,5 @@
 from interfaces.entity import Entity
 
 
-class Element(Entity):
+class AbstractElement(Entity):
     pass

@@ -1,6 +1,6 @@
 from interfaces.entity import Entity
 
-class Vector(Entity):
+class AbstractVector(Entity):
 
     @property
     def modulus(self):

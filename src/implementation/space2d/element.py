@@ -1,8 +1,8 @@
-from interfaces.element import Element
+from interfaces.element import AbstractElement
 from implementation.space2d import Entity2D, Scalar2D, Vector2D
 
 
-class Element2D(Entity2D, Element):
+class Element2D(Entity2D, AbstractElement):
 
     def __init__(self, scalar: Scalar2D, vector: Vector2D):
         self.scalar = scalar

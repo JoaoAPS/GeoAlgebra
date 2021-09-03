@@ -1,7 +1,7 @@
 import math
-from interfaces.vector import Vector
+from interfaces.vector import AbstractVector
 
-class GeneralVector(Vector):
+class GeneralVector(AbstractVector):
     
     @property
     def modulus(self):
