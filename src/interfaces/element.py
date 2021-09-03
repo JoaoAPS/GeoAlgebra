@@ -1,5 +1,5 @@
 from interfaces.entity import Entity
 
 
-class Object(Entity):
+class Element(Entity):
     pass

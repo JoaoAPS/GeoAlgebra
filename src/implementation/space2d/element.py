@@ -1,8 +1,8 @@
-from interfaces.object import Object
+from interfaces.element import Element
 from implementation.space2d import Entity2D, Scalar2D, Vector2D
 
 
-class Object2D(Entity2D, Object):
+class Element2D(Entity2D, Element):
 
     def __init__(self, scalar: Scalar2D, vector: Vector2D):
         self.scalar = scalar
@@ -12,5 +12,5 @@ class Object2D(Entity2D, Object):
         return f'{self.scalar} + {self.vector}'
 
     def __repr__(self):
-        return f'Object2D({repr(self.scalar)}, {repr(self.vector)})'
+        return f'Element2D({repr(self.scalar)}, {repr(self.vector)})'
     
