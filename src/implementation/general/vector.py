@@ -10,8 +10,3 @@ class GeneralVector(Vector):
     @property
     def direction(self):
         return self / self.modulus
-
-    def __str__(self):
-        return f'Vector({", ".join(self.components)})'
-
-    __repr__ = __str__
