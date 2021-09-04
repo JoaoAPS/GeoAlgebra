@@ -82,7 +82,7 @@ class TestVectorProperties:
 
 
 
-def test_equality():
+def test_vector_equality():
     v1 = Vector(1.2, 3)
     v2 = Vector(1.2, 3)
     v3 = Vector(1.1, 3)
