@@ -6,7 +6,7 @@ class Entity(ABC):
 
 
 class AbstractScalar(Entity):
-    
+
     @property
     @abstractmethod
     def value(self):
@@ -19,7 +19,7 @@ class AbstractVector(Entity):
     @abstractmethod
     def x(self):
         pass
-    
+
     @property
     @abstractmethod
     def y(self):
@@ -29,7 +29,7 @@ class AbstractVector(Entity):
     @abstractmethod
     def components(self):
         pass
-    
+
     @property
     @abstractmethod
     def modulus(self):
@@ -52,7 +52,7 @@ class AbstractBivector(Entity):
     @abstractmethod
     def components(self):
         pass
-    
+
     @property
     @abstractmethod
     def modulus(self):
@@ -65,33 +65,43 @@ class AbstractBivector(Entity):
 
 
 class AbstractElement(Entity):
-    
+
     @property
     @abstractmethod
     def scalar(self):
         pass
-    
+
     @property
     @abstractmethod
     def vector(self):
         pass
-    
+
     @property
     @abstractmethod
     def bivector(self):
         pass
-    
+
     @property
     @abstractmethod
     def x(self):
         pass
-    
+
     @property
     @abstractmethod
     def y(self):
         pass
-    
+
     @property
     @abstractmethod
     def xy(self):
+        pass
+
+    @property
+    @abstractmethod
+    def components(self):
+        pass
+
+    @property
+    @abstractmethod
+    def modulus(self):
         pass

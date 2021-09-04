@@ -6,6 +6,10 @@ from .abstract import AbstractScalar
 class Scalar(AbstractScalar):
 
     def __init__(self, value: Optional[float] = None):
+        if isinstance(value, Scalar):
+            self._value = value._value
+            return
+
         if value is None:
             value = 0.0
         if not isinstance(value, Number) or isinstance(value, bool):

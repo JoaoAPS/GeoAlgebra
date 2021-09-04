@@ -33,7 +33,6 @@ class TestVectorCreation:
         assert v.x == approx(x)
         assert v.y == approx(y)
 
-
     @pytest.mark.parametrize('x,y', [('3.4', 1.5), (1.4, 'oi'), ([4], 0)])
     def test_creation_errors_passing_tuple(self, x, y):
         with pytest.raises(TypeError):
@@ -54,6 +53,9 @@ class TestVectorProperties:
     def test_calculates_components_correctly(self):
         v = Vector(3.4, 1.5)
         components = v.components
+
+        assert v.x == approx(3.4)
+        assert v.y == approx(1.5)
         assert isinstance(components, tuple)
         assert len(components) == 2
         assert components[0] == approx(3.4)
@@ -72,14 +74,13 @@ class TestVectorProperties:
         v = Vector(components)
         assert v.modulus == approx(expected_modulus)
 
-
     def test_direction_is_calculated_correctly(self):
+        # TODO: Fazer quando eu souber calcular isso
         pass
-
 
     def test_direction_is_none_when_vector_is_null(self):
+        # TODO: Fazer quando eu souber calcular isso
         pass
-
 
 
 def test_vector_equality():

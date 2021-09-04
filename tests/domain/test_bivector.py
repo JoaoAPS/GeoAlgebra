@@ -48,9 +48,11 @@ class TestBivectorProperties:
         assert bv.modulus == approx(expected_modulus)
 
     def test_direction_is_calculated_correctly(self):
+        # TODO: Fazer quando eu souber calcular isso
         pass
 
     def test_direction_is_none_when_vector_is_null(self):
+        # TODO: Fazer quando eu souber calcular isso
         pass
 
 
