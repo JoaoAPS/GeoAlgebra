@@ -23,10 +23,10 @@ class Vector(AbstractVector):
 
     def _assign_components(self, x: float, y: float):
         error_msg = "Can't create Vector with component {} of type {}."
-        if not isinstance(x, Number):
-            raise TypeError(error_msg.format('x', type(x)))
-        if not isinstance(y, Number):
-            raise TypeError(error_msg.format('y', type(y)))
+        if not isinstance(x, Number) or isinstance(x, bool):
+            raise TypeError(error_msg.format('x', type(x).__name__))
+        if not isinstance(y, Number) or isinstance(y, bool):
+            raise TypeError(error_msg.format('y', type(y).__name__))
         self._x = float(x)
         self._y = float(y)
 

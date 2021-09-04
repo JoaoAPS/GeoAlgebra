@@ -19,7 +19,8 @@ class TestVectorCreation:
         assert v.x == approx(x)
         assert v.y == approx(y)
 
-    @pytest.mark.parametrize('x,y', [('3.4', 1.5), (1.4, 'oi'), ([4], 0)])
+    @pytest.mark.parametrize('x,y', [
+        ('3.4', 1.5), (1.4, 'oi'), ([4], 0), (0.4, True)])
     def test_creation_error_passing_components_separately(self, x, y):
         with pytest.raises(TypeError):
             Vector(x, y)
@@ -54,6 +55,7 @@ class TestVectorProperties:
         v = Vector(3.4, 1.5)
         components = v.components
         assert isinstance(components, tuple)
+        assert len(components) == 2
         assert components[0] == approx(3.4)
         assert components[1] == approx(1.5)
 
