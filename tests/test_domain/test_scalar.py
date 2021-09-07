@@ -4,7 +4,7 @@ from domain.scalar import Scalar
 
 
 class TestScalarCreation:
-    
+
     def test_creation_with_value(self):
         s = Scalar(4.5)
         assert s.value == approx(4.5)
