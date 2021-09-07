@@ -61,4 +61,4 @@ class Vector(AbstractVector):
         return f'{self.x}x + {self.y}y'
 
     def __repr__(self) -> str:
-        return f'Vector2D({self.x}, {self.y})'
+        return f'Vector({self.x}, {self.y})'

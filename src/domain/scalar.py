@@ -3,6 +3,7 @@ from typing import Optional
 
 from .abstract import AbstractScalar
 
+
 class Scalar(AbstractScalar):
 
     def __init__(self, value: Optional[float] = None):
