@@ -5,12 +5,12 @@ from representation.vector import VectorData
 from domain.vector import Vector
 
 
-class TestInitialization:
+class TestVectorInitialization:
     def test_initialization_successful(self, fake_adder):
-        vd = VectorData(1.2, -0.2)
-        s = Vector(vd, fake_adder)
-        assert s._data == vd
-        assert s._adder == fake_adder
+        v_data = VectorData(1.2, -0.2)
+        v = Vector(v_data, fake_adder)
+        assert v._data == v_data
+        assert v._adder == fake_adder
 
     def test_initialization_wrong_vector_data_type(self, fake_adder):
         with pytest.raises(TypeError):

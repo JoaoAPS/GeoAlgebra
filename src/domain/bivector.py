@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-import math
 from typing import Tuple
 
 from abstraction.domain import Entity
 from abstraction.operations import AbstractAdd
-from representation import VectorData
+from representation import BivectorData
 
 
-class Vector(Entity):
+class Bivector(Entity):
 
-    def __init__(self, vector_data: VectorData, adder: AbstractAdd):
-        if not isinstance(vector_data, VectorData):
-            raise TypeError('Expected vector_data of type VectorData. '
+    def __init__(self, vector_data: BivectorData, adder: AbstractAdd):
+        if not isinstance(vector_data, BivectorData):
+            raise TypeError('Expected vector_data of type BivectorData. '
                             f'Received {type(vector_data).__name__} instead.')
         if not isinstance(adder, AbstractAdd):
             raise TypeError('Expected adder to be an subtype of AbstractAdd. '
@@ -22,38 +21,32 @@ class Vector(Entity):
         self._adder = adder
 
     @property
-    def x(self) -> float:
-        return self._data.x
+    def xy(self) -> float:
+        return self._data.xy
 
     @property
-    def y(self) -> float:
-        return self._data.y
-
-    @property
-    def components(self) -> Tuple[float, float]:
-        return (self._data.x, self._data.y)
+    def components(self) -> Tuple[float]:
+        return (self._data.xy, )
 
     @property
     def modulus(self) -> float:
-        return math.sqrt(sum(component**2 for component in self.components))
+        return abs(self._data.xy)
 
     @property
-    def direction(self) -> Vector:
+    def direction(self) -> Bivector:
         pass
         # return self / self.modulus
 
     def __eq__(self, other) -> bool:
         if isinstance(other, self.__class__):
             return self._data == other._data
-        if isinstance(other, tuple):
-            return self.components == other
         return False
 
     def __str__(self) -> str:
-        return f'{self._data.x}x + {self._data.y}y'
+        return f'{self._data.xy}xy'
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(x={self._data.x}, y={self._data.y})'
+        return f'{self.__class__.__name__}(xy={self._data.xy})'
 
     def __add__(self, other: Entity) -> Entity:
         return self._adder.add(self, other)

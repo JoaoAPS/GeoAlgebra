@@ -1,8 +1,8 @@
 from typing import Optional, Union, Tuple
 from numbers import Number
 
-from representation import ScalarData, VectorData  # , BivectorData, ElementData
-from domain import Scalar, Vector  # , Bivector, Element
+from representation import ScalarData, VectorData, BivectorData  # , ElementData
+from domain import Scalar, Vector, Bivector  # , Element
 from abstraction.factory import AbstractFactory
 from operations import Add
 
@@ -49,14 +49,14 @@ class Factory(AbstractFactory):
         elif x_or_components is not None:
             _x = x_or_components
         else:
-            _x = 0.0
+            _x = None
 
         if y is not None:
             _y = y
         elif positional_y is not None:
             _y = positional_y
         else:
-            _y = 0.0
+            _y = None
 
         return self._make_vector_with_components(_x, _y)
 
@@ -69,8 +69,18 @@ class Factory(AbstractFactory):
         vector_data = VectorData(x, y)
         return Vector(vector_data, self.adder)
 
-    def make_bivector(self, *args, **kwargs):
-        pass
+    def make_bivector(self, xy: Optional[float] = None):
+        if xy is None:
+            return Bivector(BivectorData(), self.adder)
+        if isinstance(xy, Bivector):
+            return xy
+        if isinstance(xy, BivectorData):
+            return Bivector(xy, self.adder)
+        if isinstance(xy, Number) and not isinstance(xy, bool):
+            bivector_data = BivectorData(float(xy))
+            return Bivector(bivector_data, self.adder)
+        raise TypeError(
+            f"Cannot create bivector with xy of type {type(xy).__name__}.")
 
     def make_element(self, *args, **kwargs):
         pass

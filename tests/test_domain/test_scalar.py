@@ -4,7 +4,7 @@ from domain.scalar import Scalar
 from representation.scalar import ScalarData
 
 
-class TestInitialization:
+class TestScalarInitialization:
 
     def test_initialization_successful(self, fake_adder):
         s = Scalar(ScalarData(1.2), fake_adder)
@@ -20,7 +20,7 @@ class TestInitialization:
             Scalar(ScalarData(1.2), 'not an adder')
 
 
-class TestProperties:
+class TestScalarProperties:
 
     def test_propery_value(self, fake_adder):
         s = Scalar(ScalarData(1.5), fake_adder)
@@ -32,7 +32,7 @@ class TestProperties:
             s.value = 2
 
 
-class TestOperations:
+class TestScalarOperations:
 
     def test_float_equivalence(self, fake_adder):
         s = Scalar(ScalarData(1.1), fake_adder)

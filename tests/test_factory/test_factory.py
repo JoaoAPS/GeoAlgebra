@@ -1,7 +1,7 @@
 import pytest
 from pytest import approx
 
-from domain import Scalar, Vector
+from domain import Scalar, Vector, Bivector
 
 
 class TestScalarCreation:
@@ -126,3 +126,22 @@ class TestVectorCreation:
         v2 = factory.make_vector(y=2.0)
         assert v2.x == approx(0)
         assert v2.y == approx(2)
+
+
+class TestBivectorCreation:
+
+    def test_creation_default_value(self, factory):
+        bv = factory.make_bivector()
+        assert isinstance(bv, Bivector)
+        assert bv.xy == approx(0)
+
+    @pytest.mark.parametrize('xy', [3, 0, -3.4, 1.5])
+    def test_creation_successful(self, xy, factory):
+        bv = factory.make_bivector(xy)
+        assert isinstance(bv, Bivector)
+        assert bv.xy == approx(xy)
+
+    @pytest.mark.parametrize('xy', ['3.4', 'oi', [4], False])
+    def test_creation_errors(self, xy, factory):
+        with pytest.raises(TypeError):
+            factory.make_bivector(xy)
