@@ -13,7 +13,7 @@ class Scalar(Entity):
             raise TypeError('Expected scalar_data of type ScalarData. '
                             f'Received {type(scalar_data).__name__} instead.')
         if not isinstance(adder, AbstractAdd):
-            raise TypeError('Expected adder of an subtype of AbstractAdd. '
+            raise TypeError('Expected adder to be an subtype of AbstractAdd. '
                             f'Received {type(adder).__name__} instead.')
 
         self._data = scalar_data
@@ -45,5 +45,5 @@ class Scalar(Entity):
     def __radd__(self, other: Union[Entity, Number]) -> Entity:
         return self._adder.add(other, self)
 
-    def __abs__(self):
+    def __abs__(self) -> float:
         return abs(float(self))

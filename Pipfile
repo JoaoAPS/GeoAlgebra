@@ -9,6 +9,7 @@ name = "pypi"
 pytest = "*"
 pylint = "*"
 pytest-mock = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.9"
