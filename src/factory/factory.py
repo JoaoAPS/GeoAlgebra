@@ -5,6 +5,7 @@ from representation import ScalarData, VectorData, BivectorData  # , ElementData
 from domain import Scalar, Vector, Bivector  # , Element
 from abstraction.factory import AbstractFactory
 from operations import Add
+from utils.typing import is_number
 
 
 class Factory(AbstractFactory):
@@ -36,6 +37,11 @@ class Factory(AbstractFactory):
         y: Optional[float] = None,
         components: Optional[Tuple[float, float]] = None
     ):
+        if isinstance(x_or_components, Vector):
+            return x_or_components
+        if isinstance(x_or_components, VectorData):
+            return Vector(x_or_components, self.adder)
+
         if x is not None and y is not None:
             return self._make_vector_with_components(x, y)
         if components is not None:
@@ -44,30 +50,31 @@ class Factory(AbstractFactory):
         if isinstance(x_or_components, tuple):
             return self._make_vector_with_components(*x_or_components)
 
-        if x is not None:
-            _x = x
-        elif x_or_components is not None:
-            _x = x_or_components
-        else:
-            _x = None
-
-        if y is not None:
-            _y = y
-        elif positional_y is not None:
-            _y = positional_y
-        else:
-            _y = None
-
+        _x = self._find_first_non_none(x, x_or_components)
+        _y = self._find_first_non_none(y, positional_y)
         return self._make_vector_with_components(_x, _y)
 
     def _make_vector_with_components(self, x: float, y: float):
         error_msg = "Can't create Vector with component {} of type {}."
-        if not isinstance(x, Number) or isinstance(x, bool):
-            raise TypeError(error_msg.format('x', type(x).__name__))
-        if not isinstance(y, Number) or isinstance(y, bool):
-            raise TypeError(error_msg.format('y', type(y).__name__))
-        vector_data = VectorData(x, y)
+
+        vector_data_kwargs = {}
+        if x is not None:
+            if not is_number(x):
+                raise TypeError(error_msg.format('x', type(x).__name__))
+            vector_data_kwargs['x'] = x
+        if y is not None:
+            if not is_number(y):
+                raise TypeError(error_msg.format('y', type(y).__name__))
+            vector_data_kwargs['y'] = y
+
+        vector_data = VectorData(**vector_data_kwargs)
         return Vector(vector_data, self.adder)
+
+    def _find_first_non_none(self, *args):
+        for arg in args:
+            if arg is not None:
+                return arg
+        return None
 
     def make_bivector(self, xy: Optional[float] = None):
         if xy is None:

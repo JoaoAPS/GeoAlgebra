@@ -1,6 +1,7 @@
 import pytest
 from pytest import approx
 
+from representation import ScalarData, VectorData, BivectorData
 from domain import Scalar, Vector, Bivector
 
 
@@ -15,6 +16,12 @@ class TestScalarCreation:
         s = factory.make_scalar()
         assert isinstance(s, Scalar)
         assert s.value == approx(0)
+
+    def test_creation_from_scalar_data(self, factory):
+        s_data = ScalarData(5.4)
+        s = factory.make_scalar(s_data)
+        assert isinstance(s, Scalar)
+        assert s.value == approx(5.4)
 
     def test_creation_from_another_scalar(self, factory):
         s0 = factory.make_scalar(2.5)
@@ -127,6 +134,19 @@ class TestVectorCreation:
         assert v2.x == approx(0)
         assert v2.y == approx(2)
 
+    def test_creation_from_vector_data(self, factory):
+        v_data = VectorData(5.4, 0.5)
+        v = factory.make_vector(v_data)
+        assert isinstance(v, Vector)
+        assert v.x == approx(5.4)
+        assert v.y == approx(0.5)
+
+    def test_creation_from_other_vector(self, factory):
+        v0 = factory.make_vector(4.2, 5.1)
+        v = factory.make_vector(v0)
+        assert isinstance(v, Vector)
+        assert v == v0
+
 
 class TestBivectorCreation:
 
@@ -145,3 +165,15 @@ class TestBivectorCreation:
     def test_creation_errors(self, xy, factory):
         with pytest.raises(TypeError):
             factory.make_bivector(xy)
+
+    def test_creation_from_bivector_data(self, factory):
+        bv_data = BivectorData(5.4)
+        bv = factory.make_bivector(bv_data)
+        assert isinstance(bv, Bivector)
+        assert bv.xy == approx(5.4)
+
+    def test_creation_from_other_bivector(self, factory):
+        bv0 = factory.make_bivector(3.3)
+        bv = factory.make_bivector(bv0)
+        assert isinstance(bv, Bivector)
+        assert bv == bv0
