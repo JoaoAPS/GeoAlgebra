@@ -4,6 +4,7 @@ from numbers import Number
 from abstraction.domain import Entity
 from abstraction.operations import AbstractAdd
 from representation import ScalarData
+from utils.typing import is_number
 
 
 class Scalar(Entity):
@@ -35,7 +36,7 @@ class Scalar(Entity):
     def __eq__(self, other) -> bool:
         if isinstance(other, Scalar):
             return self._data == other._data
-        if isinstance(other, Number) and not isinstance(other, bool):
+        if is_number(other):
             return self._data.value == other
         return False
 

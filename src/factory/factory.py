@@ -23,7 +23,7 @@ class Factory(AbstractFactory):
             return value
         if isinstance(value, ScalarData):
             return Scalar(value, self.adder)
-        if isinstance(value, Number) and not isinstance(value, bool):
+        if is_number(value):
             scalar_data = ScalarData(float(value))
             return Scalar(scalar_data, self.adder)
         raise TypeError(
@@ -83,7 +83,7 @@ class Factory(AbstractFactory):
             return xy
         if isinstance(xy, BivectorData):
             return Bivector(xy, self.adder)
-        if isinstance(xy, Number) and not isinstance(xy, bool):
+        if is_number(xy):
             bivector_data = BivectorData(float(xy))
             return Bivector(bivector_data, self.adder)
         raise TypeError(
