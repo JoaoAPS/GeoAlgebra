@@ -1,1 +1,1 @@
-from .abstract import *
+from .scalar import Scalar
