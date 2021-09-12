@@ -6,6 +6,7 @@ from domain.vector import Vector
 
 
 class TestVectorInitialization:
+
     def test_initialization_successful(self, fake_adder):
         v_data = VectorData(1.2, -0.2)
         v = Vector(v_data, fake_adder)
