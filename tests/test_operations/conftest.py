@@ -7,3 +7,8 @@ from operations.add import Add
 def adder():
     factory = Factory()
     return Add(factory)
+
+
+@fixture
+def factory():
+    return Factory()
