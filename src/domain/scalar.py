@@ -4,23 +4,23 @@ from typing import Union
 from numbers import Number
 
 from abstraction.domain import Entity
-from abstraction.operations import AbstractAdd
+from abstraction.operations import Operator
 from representation import ScalarData
 from utils.typing import is_number
 
 
 class Scalar(Entity):
 
-    def __init__(self, scalar_data: ScalarData, adder: AbstractAdd):
+    def __init__(self, scalar_data: ScalarData, operator: Operator):
         if not isinstance(scalar_data, ScalarData):
             raise TypeError('Expected scalar_data of type ScalarData. '
                             f'Received {type(scalar_data).__name__} instead.')
-        if not isinstance(adder, AbstractAdd):
-            raise TypeError('Expected adder to be an subtype of AbstractAdd. '
-                            f'Received {type(adder).__name__} instead.')
+        if not isinstance(operator, Operator):
+            raise TypeError('Expected operator to be of type Operator. '
+                            f'Received {type(operator).__name__} instead.')
 
         self._data = scalar_data
-        self._adder = adder
+        self._operator = operator
 
     @property
     def value(self) -> float:
@@ -44,13 +44,13 @@ class Scalar(Entity):
 
     def __neg__(self) -> Scalar:
         negative_data = ScalarData(-self._data.value)
-        return Scalar(negative_data, self._adder)
+        return Scalar(negative_data, self._operator)
 
     def __add__(self, other: Union[Entity, Number]) -> Entity:
-        return self._adder.add(self, other)
+        return self._operator.add(self, other)
 
     def __radd__(self, other: Union[Entity, Number]) -> Entity:
-        return self._adder.add(other, self)
+        return self._operator.add(other, self)
 
     def __abs__(self) -> float:
         return abs(float(self))

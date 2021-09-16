@@ -7,51 +7,51 @@ from domain import Scalar, Vector, Bivector, Element
 
 class TestElementInitialization:
 
-    def test_initialization_successful(self, fake_adder):
-        s = Scalar(ScalarData(0.5), fake_adder)
-        v = Vector(VectorData(1.2, -0.2), fake_adder)
-        bv = Bivector(BivectorData(7.0), fake_adder)
-        e = Element(s, v, bv, fake_adder)
+    def test_initialization_successful(self, fake_operator):
+        s = Scalar(ScalarData(0.5), fake_operator)
+        v = Vector(VectorData(1.2, -0.2), fake_operator)
+        bv = Bivector(BivectorData(7.0), fake_operator)
+        e = Element(s, v, bv, fake_operator)
 
         assert e._scalar == s
         assert e._vector == v
         assert e._bivector == bv
-        assert e._adder == fake_adder
+        assert e._operator == fake_operator
 
     def test_initialization_wrong_scalar_type(
-        self, vector, bivector, fake_adder
+        self, vector, bivector, fake_operator
     ):
         s = 0.1
         with pytest.raises(TypeError):
-            Element(s, vector, bivector, fake_adder)
+            Element(s, vector, bivector, fake_operator)
 
     def test_initialization_wrong_vector_type(
-        self, scalar, bivector, fake_adder
+        self, scalar, bivector, fake_operator
     ):
         v = (1.2, 3.2)
         with pytest.raises(TypeError):
-            Element(scalar, v, bivector, fake_adder)
+            Element(scalar, v, bivector, fake_operator)
 
     def test_initialization_wrong_bivector_type(
-        self, scalar, vector, fake_adder
+        self, scalar, vector, fake_operator
     ):
         bv = 4.1
         with pytest.raises(TypeError):
-            Element(scalar, vector, bv, fake_adder)
+            Element(scalar, vector, bv, fake_operator)
 
-    def test_initialization_wrong_adder_type(
-        self, scalar, vector, bivector, fake_adder
+    def test_initialization_wrong_operator_type(
+        self, scalar, vector, bivector, fake_operator
     ):
         with pytest.raises(TypeError):
-            Element(scalar, vector, bivector, 'not an adder')
+            Element(scalar, vector, bivector, 'not an operator')
 
 
 class TestElementProperties:
 
     def test_calculates_components_correctly(
-        self, scalar, vector, bivector, fake_adder
+        self, scalar, vector, bivector, fake_operator
     ):
-        e = Element(scalar, vector, bivector, fake_adder)
+        e = Element(scalar, vector, bivector, fake_operator)
 
         assert e.scalar == scalar
         assert e.vector == vector
@@ -67,12 +67,12 @@ class TestElementProperties:
         assert components == (float(scalar), vector.x, vector.y, bivector.xy)
 
     def test_cannot_change_components(
-        self, scalar, vector, bivector, fake_adder
+        self, scalar, vector, bivector, fake_operator
     ):
-        e = Element(scalar, vector, bivector, fake_adder)
-        other_scalar = Scalar(ScalarData(2.4), fake_adder)
-        other_vector = Vector(VectorData(2.4, 1), fake_adder)
-        other_bivector = Bivector(BivectorData(2.4), fake_adder)
+        e = Element(scalar, vector, bivector, fake_operator)
+        other_scalar = Scalar(ScalarData(2.4), fake_operator)
+        other_vector = Vector(VectorData(2.4, 1), fake_operator)
+        other_bivector = Bivector(BivectorData(2.4), fake_operator)
 
         with pytest.raises(AttributeError):
             e.scalar = other_scalar
@@ -96,7 +96,7 @@ class TestElementProperties:
 
 class TestElementOperations:
 
-    def test_element_equality(self, fake_adder):
+    def test_element_equality(self, fake_operator):
         components = [
             (1.0, 2.0, 3.0, 4.0),
             (1.0, 2.0, 3.0, 4.0),
@@ -108,10 +108,10 @@ class TestElementOperations:
 
         elements = [
             Element(
-                Scalar(ScalarData(comp[0]), fake_adder),
-                Vector(VectorData(comp[1], comp[2]), fake_adder),
-                Bivector(BivectorData(comp[3]), fake_adder),
-                fake_adder
+                Scalar(ScalarData(comp[0]), fake_operator),
+                Vector(VectorData(comp[1], comp[2]), fake_operator),
+                Bivector(BivectorData(comp[3]), fake_operator),
+                fake_operator
             )
             for comp in components
         ]
@@ -122,31 +122,35 @@ class TestElementOperations:
         assert elements[0] != elements[4]
         assert elements[0] != elements[5]
 
-    def test_negative_of_element(self, fake_adder):
+    def test_negative_of_element(self, fake_operator):
         e = Element(
-            Scalar(ScalarData(-1.2), fake_adder),
-            Vector(VectorData(-0.4, 10), fake_adder),
-            Bivector(BivectorData(-0.1), fake_adder),
-            fake_adder
+            Scalar(ScalarData(-1.2), fake_operator),
+            Vector(VectorData(-0.4, 10), fake_operator),
+            Bivector(BivectorData(-0.1), fake_operator),
+            fake_operator
         )
         negative_e = Element(
-            Scalar(ScalarData(1.2), fake_adder),
-            Vector(VectorData(0.4, -10), fake_adder),
-            Bivector(BivectorData(0.1), fake_adder),
-            fake_adder
+            Scalar(ScalarData(1.2), fake_operator),
+            Vector(VectorData(0.4, -10), fake_operator),
+            Bivector(BivectorData(0.1), fake_operator),
+            fake_operator
         )
         assert -e == negative_e
 
-    def test_addition_calls_adder(self, element, fake_adder, mocker):
-        mocker.patch.object(fake_adder, 'add', return_value='expected result')
+    def test_addition_calls_operator(self, element, fake_operator, mocker):
+        mocker.patch.object(
+            fake_operator, 'add', return_value='expected result')
         other = 'object to add'
         result = element + other
-        fake_adder.add.assert_called_with(element, other)
+        fake_operator.add.assert_called_with(element, other)
         assert result == 'expected result'
 
-    def test_right_addition_calls_adder(self, element, fake_adder, mocker):
-        mocker.patch.object(fake_adder, 'add', return_value='expected result')
+    def test_right_addition_calls_operator(
+        self, element, fake_operator, mocker
+    ):
+        mocker.patch.object(
+            fake_operator, 'add', return_value='expected result')
         other = 'object to add'
         result = other + element
-        fake_adder.add.assert_called_with(other, element)
+        fake_operator.add.assert_called_with(other, element)
         assert result == 'expected result'

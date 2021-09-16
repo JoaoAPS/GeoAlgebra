@@ -1,31 +1,34 @@
 from typing import Optional, Union, Tuple
 from numbers import Number
 
+from abstraction.factory import AbstractFactory
+from abstraction.operations import Operator
 from representation import ScalarData, VectorData, BivectorData
 from domain import Scalar, Vector, Bivector, Element
-from abstraction.factory import AbstractFactory
-from operations import Add
+from operations import Adder
 from utils.typing import is_number
 
 
 class Factory(AbstractFactory):
 
     def __init__(self):
-        self.adder = Add(self)
+        adder = Adder(self)
+        # TODO: Alterar conforme novas operações forem acrescentadas
+        self.operator = Operator(adder, None, None, None)
 
     def make_scalar(
         self,
         value: Optional[Union[Scalar, ScalarData, Number]] = None
     ) -> Scalar:
         if value is None:
-            return Scalar(ScalarData(), self.adder)
+            return Scalar(ScalarData(), self.operator)
         if isinstance(value, Scalar):
             return value
         if isinstance(value, ScalarData):
-            return Scalar(value, self.adder)
+            return Scalar(value, self.operator)
         if is_number(value):
             scalar_data = ScalarData(float(value))
-            return Scalar(scalar_data, self.adder)
+            return Scalar(scalar_data, self.operator)
         raise TypeError(
             f"Cannot create scalar with value of type {type(value).__name__}.")
 
@@ -40,7 +43,7 @@ class Factory(AbstractFactory):
         if isinstance(wildcard, Vector):
             return wildcard
         if isinstance(wildcard, VectorData):
-            return Vector(wildcard, self.adder)
+            return Vector(wildcard, self.operator)
 
         if x is not None and y is not None:
             return self._make_vector_with_components(x, y)
@@ -68,7 +71,7 @@ class Factory(AbstractFactory):
             vector_data_kwargs['y'] = y
 
         vector_data = VectorData(**vector_data_kwargs)
-        return Vector(vector_data, self.adder)
+        return Vector(vector_data, self.operator)
 
     def _find_first_non_none(self, *args):
         for arg in args:
@@ -81,14 +84,14 @@ class Factory(AbstractFactory):
         xy: Optional[Union[Number, Bivector, BivectorData]] = None
     ) -> Bivector:
         if xy is None:
-            return Bivector(BivectorData(), self.adder)
+            return Bivector(BivectorData(), self.operator)
         if isinstance(xy, Bivector):
             return xy
         if isinstance(xy, BivectorData):
-            return Bivector(xy, self.adder)
+            return Bivector(xy, self.operator)
         if is_number(xy):
             bivector_data = BivectorData(float(xy))
-            return Bivector(bivector_data, self.adder)
+            return Bivector(bivector_data, self.operator)
         raise TypeError(
             f"Cannot create bivector with xy of type {type(xy).__name__}.")
 
@@ -202,4 +205,8 @@ class Factory(AbstractFactory):
                 error_msg.format('bivector', type(bivector).__name__))
 
         return Element(
-            scalar=scalar, vector=vector, bivector=bivector, adder=self.adder)
+            scalar=scalar,
+            vector=vector,
+            bivector=bivector,
+            operator=self.operator
+        )

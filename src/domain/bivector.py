@@ -3,22 +3,22 @@ from __future__ import annotations
 from typing import Tuple
 
 from abstraction.domain import Entity
-from abstraction.operations import AbstractAdd
+from abstraction.operations import Operator
 from representation import BivectorData
 
 
 class Bivector(Entity):
 
-    def __init__(self, vector_data: BivectorData, adder: AbstractAdd):
+    def __init__(self, vector_data: BivectorData, operator: Operator):
         if not isinstance(vector_data, BivectorData):
             raise TypeError('Expected vector_data of type BivectorData. '
                             f'Received {type(vector_data).__name__} instead.')
-        if not isinstance(adder, AbstractAdd):
-            raise TypeError('Expected adder to be an subtype of AbstractAdd. '
-                            f'Received {type(adder).__name__} instead.')
+        if not isinstance(operator, Operator):
+            raise TypeError('Expected operator to be of type Operator. '
+                            f'Received {type(operator).__name__} instead.')
 
         self._data = vector_data
-        self._adder = adder
+        self._operator = operator
 
     @property
     def xy(self) -> float:
@@ -50,13 +50,13 @@ class Bivector(Entity):
 
     def __neg__(self) -> Bivector:
         negative_data = BivectorData(-self._data.xy)
-        return Bivector(negative_data, self._adder)
+        return Bivector(negative_data, self._operator)
 
     def __add__(self, other: Entity) -> Entity:
-        return self._adder.add(self, other)
+        return self._operator.add(self, other)
 
     def __radd__(self, other: Entity) -> Entity:
-        return self._adder.add(other, self)
+        return self._operator.add(other, self)
 
     def __abs__(self) -> float:
         return self.modulus

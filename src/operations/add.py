@@ -1,12 +1,12 @@
 from numbers import Number
 
-from abstraction.operations import AbstractAdd
+from abstraction.operations import AbstractAdder
 from abstraction.domain import Entity
 from abstraction.factory import AbstractFactory
 from domain import Scalar, Vector, Bivector, Element
 
 
-class Add(AbstractAdd):
+class Adder(AbstractAdder):
 
     def __init__(self, factory: AbstractFactory):
         self.factory = factory

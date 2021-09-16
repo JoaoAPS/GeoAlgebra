@@ -5,20 +5,20 @@ from domain import Scalar, Vector, Bivector, Element
 
 
 @fixture
-def scalar(fake_adder):
-    return Scalar(ScalarData(1.2), fake_adder)
+def scalar(fake_operator):
+    return Scalar(ScalarData(1.2), fake_operator)
 
 
 @fixture
-def vector(fake_adder):
-    return Vector(VectorData(2.2, -3.0), fake_adder)
+def vector(fake_operator):
+    return Vector(VectorData(2.2, -3.0), fake_operator)
 
 
 @fixture
-def bivector(fake_adder):
-    return Bivector(BivectorData(4.4), fake_adder)
+def bivector(fake_operator):
+    return Bivector(BivectorData(4.4), fake_operator)
 
 
 @fixture
-def element(scalar, vector, bivector, fake_adder):
-    return Element(scalar, vector, bivector, fake_adder)
+def element(scalar, vector, bivector, fake_operator):
+    return Element(scalar, vector, bivector, fake_operator)

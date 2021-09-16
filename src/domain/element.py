@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Tuple
 
 from abstraction.domain import Entity
-from abstraction.operations import AbstractAdd
+from abstraction.operations import Operator
 from domain import Scalar, Vector, Bivector
 
 
@@ -14,7 +14,7 @@ class Element(Entity):
         scalar: Scalar,
         vector: Vector,
         bivector: Bivector,
-        adder: AbstractAdd
+        operator: Operator,
     ):
         if not isinstance(scalar, Scalar):
             raise TypeError('Expected scalar of type Scalar. '
@@ -25,14 +25,14 @@ class Element(Entity):
         if not isinstance(bivector, Bivector):
             raise TypeError('Expected bivector of type Bivector. '
                             f'Received {type(bivector).__name__} instead.')
-        if not isinstance(adder, AbstractAdd):
-            raise TypeError('Expected adder to be an subtype of AbstractAdd. '
-                            f'Received {type(adder).__name__} instead.')
+        if not isinstance(operator, Operator):
+            raise TypeError('Expected operator to be of type Operator. '
+                            f'Received {type(operator).__name__} instead.')
 
         self._scalar = scalar
         self._vector = vector
         self._bivector = bivector
-        self._adder = adder
+        self._operator = operator
 
     @property
     def scalar(self) -> float:
@@ -80,10 +80,10 @@ class Element(Entity):
                 f'{repr(self._vector)}, {repr(self._bivector)})')
 
     def __add__(self, other: Entity) -> Entity:
-        return self._adder.add(self, other)
+        return self._operator.add(self, other)
 
     def __radd__(self, other: Entity) -> Entity:
-        return self._adder.add(other, self)
+        return self._operator.add(other, self)
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, Entity):
@@ -100,7 +100,7 @@ class Element(Entity):
 
     def __neg__(self) -> Element:
         return Element(
-            -self._scalar, -self.vector, -self.bivector, self._adder)
+            -self._scalar, -self.vector, -self.bivector, self._operator)
 
     def _is_element_equal(self, other: Element) -> bool:
         for component in ['_scalar', '_vector', '_bivector']:

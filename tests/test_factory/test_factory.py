@@ -1,8 +1,23 @@
 import pytest
 from pytest import approx
 
+from abstraction.operations import Operator
 from representation import ScalarData, VectorData, BivectorData
 from domain import Scalar, Vector, Bivector, Element
+from factory import Factory
+import operations
+
+
+class TestFactoryInitialization:
+
+    def test_creates_an_operator_instance(self):
+        factory = Factory()
+        assert hasattr(factory, 'operator')
+        assert isinstance(factory.operator, Operator)
+
+    def test_operator_adder_is_concrete_adder(self):
+        factory = Factory()
+        assert isinstance(factory.operator._adder, operations.Adder)
 
 
 class TestScalarCreation:
@@ -11,23 +26,27 @@ class TestScalarCreation:
         s = factory.make_scalar(4.5)
         assert isinstance(s, Scalar)
         assert s.value == approx(4.5)
+        assert s._operator == factory.operator
 
     def test_creation_default_value(self, factory):
         s = factory.make_scalar()
         assert isinstance(s, Scalar)
         assert s.value == approx(0)
+        assert s._operator == factory.operator
 
     def test_creation_from_scalar_data(self, factory):
         s_data = ScalarData(5.4)
         s = factory.make_scalar(s_data)
         assert isinstance(s, Scalar)
         assert s.value == approx(5.4)
+        assert s._operator == factory.operator
 
     def test_creation_from_another_scalar(self, factory):
         s0 = factory.make_scalar(2.5)
         s = factory.make_scalar(s0)
         assert isinstance(s, Scalar)
         assert s.value == approx(2.5)
+        assert s._operator == factory.operator
 
     @pytest.mark.parametrize('value', ['12', 'oi', [1], False])
     def test_creation_raises_error_if_value_is_not_number(
@@ -44,6 +63,7 @@ class TestVectorCreationPassingPositionalArguments:
         assert isinstance(v, Vector)
         assert v.x == approx(0)
         assert v.y == approx(0)
+        assert v._operator == factory.operator
 
     @pytest.mark.parametrize('x,y', [(3, 1), (0, 0), (-3.4, 1.5)])
     def test_creation_successful_passing_positional_components_separately(
@@ -53,6 +73,7 @@ class TestVectorCreationPassingPositionalArguments:
         assert isinstance(v, Vector)
         assert v.x == approx(x)
         assert v.y == approx(y)
+        assert v._operator == factory.operator
 
     @pytest.mark.parametrize('x,y', [
         ('3.4', 1.5), (1.4, 'oi'), ([4], 0), (0.4, True)])
@@ -70,6 +91,7 @@ class TestVectorCreationPassingPositionalArguments:
         assert isinstance(v, Vector)
         assert v.x == approx(x)
         assert v.y == approx(y)
+        assert v._operator == factory.operator
 
     @pytest.mark.parametrize('x,y', [
         ('3.4', 1.5), (1.4, 'oi'), ([4], 0), (0.4, True)])
@@ -85,6 +107,7 @@ class TestVectorCreationPassingPositionalArguments:
         assert isinstance(v, Vector)
         assert v.x == approx(x)
         assert v.y == approx(y)
+        assert v._operator == factory.operator
 
     @pytest.mark.parametrize('x,y', [('3.4', 1.5), (1.4, 'oi'), ([4], 0)])
     def test_creation_errors_passing_positional_tuple(self, x, y, factory):
@@ -97,6 +120,7 @@ class TestVectorCreationPassingPositionalArguments:
         assert isinstance(v, Vector)
         assert v.x == approx(5.4)
         assert v.y == approx(0.5)
+        assert v._operator == factory.operator
 
     def test_creation_from_other_vector(self, factory):
         v0 = factory.make_vector(4.2, 5.1)
@@ -113,6 +137,7 @@ class TestVectorCreationPassingNamedArguments:
         assert isinstance(v, Vector)
         assert v.x == approx(x)
         assert v.y == approx(y)
+        assert v._operator == factory.operator
 
     @pytest.mark.parametrize('x,y', [('3.4', 1.5), (1.4, 'oi'), ([4], 0)])
     def test_creation_errors_passing_named_tuple(self, x, y, factory):
@@ -157,29 +182,45 @@ class TestBivectorCreation:
         bv = factory.make_bivector()
         assert isinstance(bv, Bivector)
         assert bv.xy == approx(0)
+        assert bv._operator == factory.operator
 
     @pytest.mark.parametrize('xy', [3, 0, -3.4, 1.5])
-    def test_creation_successful(self, xy, factory):
+    def test_creation_passing_positional_xy(self, xy, factory):
         bv = factory.make_bivector(xy)
         assert isinstance(bv, Bivector)
         assert bv.xy == approx(xy)
+        assert bv._operator == factory.operator
 
     @pytest.mark.parametrize('xy', ['3.4', 'oi', [4], False])
-    def test_creation_errors(self, xy, factory):
+    def test_creation_errors_positional(self, xy, factory):
         with pytest.raises(TypeError):
             factory.make_bivector(xy)
+
+    @pytest.mark.parametrize('xy', [3, 0, -3.4, 1.5])
+    def test_creation_passing_named_xy(self, xy, factory):
+        bv = factory.make_bivector(xy=xy)
+        assert isinstance(bv, Bivector)
+        assert bv.xy == approx(xy)
+        assert bv._operator == factory.operator
+
+    @pytest.mark.parametrize('xy', ['3.4', 'oi', [4], False])
+    def test_creation_errors_positional(self, xy, factory):
+        with pytest.raises(TypeError):
+            factory.make_bivector(xy=xy)
 
     def test_creation_from_bivector_data(self, factory):
         bv_data = BivectorData(5.4)
         bv = factory.make_bivector(bv_data)
         assert isinstance(bv, Bivector)
         assert bv.xy == approx(5.4)
+        assert bv._operator == factory.operator
 
     def test_creation_from_other_bivector(self, factory):
         bv0 = factory.make_bivector(3.3)
         bv = factory.make_bivector(bv0)
         assert isinstance(bv, Bivector)
         assert bv == bv0
+        assert bv._operator == factory.operator
 
 
 class TestElementCreationPassingPositionalArguments:
@@ -192,6 +233,7 @@ class TestElementCreationPassingPositionalArguments:
         assert e.scalar == scalar
         assert e.vector == vector
         assert e.bivector == bivector
+        assert e._operator == factory.operator
 
     def test_creation_error_passing_positional_entities(
         self, scalar, vector, bivector, factory
@@ -209,6 +251,7 @@ class TestElementCreationPassingPositionalArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector(2.0, 3.0)
         assert e.bivector == factory.make_bivector(4.0)
+        assert e._operator == factory.operator
 
     @pytest.mark.parametrize('s,x,y,xy', [
         ('3.4', 1.5, 0.4, 0.4),
@@ -228,6 +271,7 @@ class TestElementCreationPassingPositionalArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector(2.0, 3.0)
         assert e.bivector == factory.make_bivector(4.0)
+        assert e._operator == factory.operator
 
     @pytest.mark.parametrize('s,x,y,xy', [
         ('3.4', 1.5, 0.4, 0.4),
@@ -253,6 +297,7 @@ class TestElementCreationPassingPositionalArguments:
         assert e.scalar == factory.make_scalar()
         assert e.vector == factory.make_vector()
         assert e.bivector == factory.make_bivector()
+        assert e._operator == factory.operator
 
     def test_creation_vector_and_bivector_default_value_positional(
         self, factory
@@ -262,6 +307,7 @@ class TestElementCreationPassingPositionalArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector()
         assert e.bivector == factory.make_bivector()
+        assert e._operator == factory.operator
 
     def test_creation_vector_y_default_value_positional(self, factory):
         e = factory.make_element(1.0, 2.0)
@@ -269,6 +315,7 @@ class TestElementCreationPassingPositionalArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector(2.0)
         assert e.bivector == factory.make_bivector()
+        assert e._operator == factory.operator
 
     def test_creation_bivector_default_value_positional(self, factory):
         e = factory.make_element(1.0, 2.0, 3.0)
@@ -276,6 +323,7 @@ class TestElementCreationPassingPositionalArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector(2.0, 3.0)
         assert e.bivector == factory.make_bivector()
+        assert e._operator == factory.operator
 
     def test_creation_from_other_element(self, factory):
         e0 = factory.make_element(1.2, 7.0, 4.2, 5.1)
@@ -295,6 +343,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == scalar
         assert e.vector == vector
         assert e.bivector == bivector
+        assert e._operator == factory.operator
 
     def test_creation_error_passing_named_entities(
         self, scalar, vector, bivector, factory
@@ -315,6 +364,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector(2.0, 3.0)
         assert e.bivector == factory.make_bivector(4.0)
+        assert e._operator == factory.operator
 
     @pytest.mark.parametrize('s,x,y,xy', [
         ('3.4', 1.5, 0.4, 0.4),
@@ -334,6 +384,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector(2.0, 3.0)
         assert e.bivector == factory.make_bivector(4.0)
+        assert e._operator == factory.operator
 
     @pytest.mark.parametrize('s,x,y,xy', [
         ('3.4', 1.5, 0.4, 0.4),
@@ -361,6 +412,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector()
         assert e.bivector == factory.make_bivector()
+        assert e._operator == factory.operator
 
     def test_creation_passing_only_named_vector(self, factory):
         v = factory.make_vector(1.0, 2.0)
@@ -369,6 +421,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar()
         assert e.vector == v
         assert e.bivector == factory.make_bivector()
+        assert e._operator == factory.operator
 
     def test_creation_passing_only_named_bivector(self, factory):
         bv = factory.make_bivector(1.0)
@@ -377,6 +430,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar()
         assert e.vector == factory.make_vector()
         assert e.bivector == bv
+        assert e._operator == factory.operator
 
     def test_creation_passing_only_named_x(self, factory):
         e = factory.make_element(x=5.0)
@@ -384,6 +438,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar()
         assert e.vector == factory.make_vector(x=5.0)
         assert e.bivector == factory.make_bivector()
+        assert e._operator == factory.operator
 
     def test_creation_passing_only_named_y(self, factory):
         e = factory.make_element(y=5.0)
@@ -391,6 +446,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar()
         assert e.vector == factory.make_vector(y=5.0)
         assert e.bivector == factory.make_bivector()
+        assert e._operator == factory.operator
 
     def test_creation_passing_only_named_xy(self, factory):
         e = factory.make_element(xy=5.0)
@@ -398,6 +454,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar()
         assert e.vector == factory.make_vector()
         assert e.bivector == factory.make_bivector(5.0)
+        assert e._operator == factory.operator
 
     def test_entities_take_precedence_over_indivudual_components(
         self, factory, scalar, vector, bivector
@@ -414,6 +471,7 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == scalar
         assert e.vector == vector
         assert e.bivector == bivector
+        assert e._operator == factory.operator
 
     def test_indivudual_components_take_precedence_over_tuple_components(
         self, factory
@@ -429,3 +487,4 @@ class TestElementCreationPassingNamedArguments:
         assert e.scalar == factory.make_scalar(1.0)
         assert e.vector == factory.make_vector(2.0, 3.0)
         assert e.bivector == factory.make_bivector(4.0)
+        assert e._operator == factory.operator
