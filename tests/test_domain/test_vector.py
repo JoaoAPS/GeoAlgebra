@@ -75,6 +75,11 @@ class TestVectorOperations:
         assert v1 == v2
         assert v1 != v3
 
+    def test_negative_of_vector(self, fake_adder):
+        v = Vector(VectorData(2.0, -1.5), fake_adder)
+        negative_v = Vector(VectorData(-2.0, 1.5), fake_adder)
+        assert -v == negative_v
+
     def test_addition_calls_adder(self, fake_adder, mocker):
         mocker.patch.object(fake_adder, 'add', return_value='expected result')
         v = Vector(VectorData(2, 1), fake_adder)

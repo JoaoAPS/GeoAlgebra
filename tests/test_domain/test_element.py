@@ -122,6 +122,21 @@ class TestElementOperations:
         assert elements[0] != elements[4]
         assert elements[0] != elements[5]
 
+    def test_negative_of_element(self, fake_adder):
+        e = Element(
+            Scalar(ScalarData(-1.2), fake_adder),
+            Vector(VectorData(-0.4, 10), fake_adder),
+            Bivector(BivectorData(-0.1), fake_adder),
+            fake_adder
+        )
+        negative_e = Element(
+            Scalar(ScalarData(1.2), fake_adder),
+            Vector(VectorData(0.4, -10), fake_adder),
+            Bivector(BivectorData(0.1), fake_adder),
+            fake_adder
+        )
+        assert -e == negative_e
+
     def test_addition_calls_adder(self, element, fake_adder, mocker):
         mocker.patch.object(fake_adder, 'add', return_value='expected result')
         other = 'object to add'

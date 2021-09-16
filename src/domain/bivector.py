@@ -37,16 +37,20 @@ class Bivector(Entity):
         pass
         # return self / self.modulus
 
-    def __eq__(self, other) -> bool:
-        if isinstance(other, self.__class__):
-            return self._data == other._data
-        return False
-
     def __str__(self) -> str:
         return f'{self._data.xy}xy'
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(xy={self._data.xy})'
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, self.__class__):
+            return self._data == other._data
+        return False
+
+    def __neg__(self) -> Bivector:
+        negative_data = BivectorData(-self._data.xy)
+        return Bivector(negative_data, self._adder)
 
     def __add__(self, other: Entity) -> Entity:
         return self._adder.add(self, other)

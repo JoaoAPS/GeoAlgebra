@@ -46,9 +46,14 @@ class TestScalarOperations:
         assert s1 != s3
 
     def test_equality_with_numbers(self, fake_adder):
-        s1 = Scalar(ScalarData(2.0), fake_adder)
-        assert s1 == 2.0
-        assert s1 != 3.1
+        s = Scalar(ScalarData(2.0), fake_adder)
+        assert s == 2.0
+        assert s != 3.1
+
+    def test_negative_of_scalar(self, fake_adder):
+        s = Scalar(ScalarData(2.0), fake_adder)
+        negative_s = Scalar(ScalarData(-2.0), fake_adder)
+        assert -s == negative_s
 
     def test_addition_calls_adder(self, fake_adder, mocker):
         mocker.patch.object(fake_adder, 'add', return_value='expected result')

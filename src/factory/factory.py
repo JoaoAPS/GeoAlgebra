@@ -31,26 +31,26 @@ class Factory(AbstractFactory):
 
     def make_vector(
         self,
-        x_or_components: Optional[Union[float, Tuple[float, float]]] = None,
+        wildcard: Optional[Union[float, Tuple, Vector, VectorData]] = None,
         positional_y: Optional[float] = None,
         x: Optional[float] = None,
         y: Optional[float] = None,
         components: Optional[Tuple[float, float]] = None
     ) -> Vector:
-        if isinstance(x_or_components, Vector):
-            return x_or_components
-        if isinstance(x_or_components, VectorData):
-            return Vector(x_or_components, self.adder)
+        if isinstance(wildcard, Vector):
+            return wildcard
+        if isinstance(wildcard, VectorData):
+            return Vector(wildcard, self.adder)
 
         if x is not None and y is not None:
             return self._make_vector_with_components(x, y)
         if components is not None:
             return self._make_vector_with_components(*components)
 
-        if isinstance(x_or_components, tuple):
-            return self._make_vector_with_components(*x_or_components)
+        if isinstance(wildcard, tuple):
+            return self._make_vector_with_components(*wildcard)
 
-        _x = self._find_first_non_none(x, x_or_components)
+        _x = self._find_first_non_none(x, wildcard)
         _y = self._find_first_non_none(y, positional_y)
         return self._make_vector_with_components(_x, _y)
 

@@ -42,6 +42,12 @@ class Vector(Entity):
         pass
         # return self / self.modulus
 
+    def __str__(self) -> str:
+        return f'{self._data.x}x + {self._data.y}y'
+
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(x={self._data.x}, y={self._data.y})'
+
     def __eq__(self, other) -> bool:
         if isinstance(other, self.__class__):
             return self._data == other._data
@@ -49,11 +55,9 @@ class Vector(Entity):
             return self.components == other
         return False
 
-    def __str__(self) -> str:
-        return f'{self._data.x}x + {self._data.y}y'
-
-    def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(x={self._data.x}, y={self._data.y})'
+    def __neg__(self) -> Vector:
+        negative_data = VectorData(-self._data.x, -self._data.y)
+        return Vector(negative_data, self._adder)
 
     def __add__(self, other: Entity) -> Entity:
         return self._adder.add(self, other)

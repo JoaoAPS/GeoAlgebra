@@ -98,6 +98,10 @@ class Element(Entity):
             return self._is_bivector_equal(other)
         return False
 
+    def __neg__(self) -> Element:
+        return Element(
+            -self._scalar, -self.vector, -self.bivector, self._adder)
+
     def _is_element_equal(self, other: Element) -> bool:
         for component in ['_scalar', '_vector', '_bivector']:
             if getattr(self, component) != getattr(other, component):

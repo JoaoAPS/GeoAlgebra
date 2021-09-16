@@ -12,7 +12,7 @@ class TestScalarCreation:
         assert isinstance(s, Scalar)
         assert s.value == approx(4.5)
 
-    def test_creation_deafult_value(self, factory):
+    def test_creation_default_value(self, factory):
         s = factory.make_scalar()
         assert isinstance(s, Scalar)
         assert s.value == approx(0)

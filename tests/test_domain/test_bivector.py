@@ -67,6 +67,11 @@ class TestBivectorOperations:
         assert bv1 == bv2
         assert bv1 != bv3
 
+    def test_negative_of_bivector(self, fake_adder):
+        bv = Bivector(BivectorData(1.2), fake_adder)
+        negative_bv = Bivector(BivectorData(-1.2), fake_adder)
+        assert -bv == negative_bv
+
     def test_addition_calls_adder(self, fake_adder, mocker):
         mocker.patch.object(fake_adder, 'add', return_value='expected result')
         bv = Bivector(BivectorData(2), fake_adder)

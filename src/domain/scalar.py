@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Union
 from numbers import Number
 
@@ -39,6 +41,10 @@ class Scalar(Entity):
         if is_number(other):
             return self._data.value == other
         return False
+
+    def __neg__(self) -> Scalar:
+        negative_data = ScalarData(-self._data.value)
+        return Scalar(negative_data, self._adder)
 
     def __add__(self, other: Union[Entity, Number]) -> Entity:
         return self._adder.add(self, other)
